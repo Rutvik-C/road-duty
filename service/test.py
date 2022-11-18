@@ -7,7 +7,7 @@ from detectron2.utils.visualizer import Visualizer
 from src.classes.detector import Detector
 
 
-motorcycleDetector = Detector("models/motorcycle/v2/config.yaml", "models/motorcycle/v2/model_final.pth", 0.5)
+motorcycleDetector = Detector("test", "models/motorcycle/v2/config.yaml", "models/motorcycle/v2/model_final.pth", 0.5)
 
 img = cv2.imread("test/332.jpg")
 
