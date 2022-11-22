@@ -2,6 +2,8 @@ import cv2
 from multiprocessing import Queue, Process
 
 from src.classes.detector import Detector
+from src.classes.frame import Frame
+
 from src.utils.motorcycle import detectMotorcycle
 from src.utils.helmet import detectHelmet
 from src.utils.license import detectLicense
@@ -23,9 +25,10 @@ if __name__ == '__main__':
     Process(target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector)).start()
     Process(target=processResult, args=(detectLicenseOutputQueue,)).start()
 
-    tmp = ["test/332.jpg"]
+    tmp = ["test/394.jpg", "test/412.jpg", "test/451.jpg"]
 
     print(f"INFO: Starting main loop.")
     while True:
         if len(tmp) > 0:
-            inputQueue.put(cv2.imread(tmp.pop()))
+            frame = Frame(cv2.imread(tmp.pop()), "Nanodiwadi Vasalai")
+            inputQueue.put(frame)

@@ -1,5 +1,6 @@
 import uuid
 import cv2
+import json
 
 
 def processResult(ip):
@@ -8,6 +9,16 @@ def processResult(ip):
             continue
 
         print(f"INFO: ResultProcess: Generating result.")
-        img = ip.get()
+        frame = ip.get()
 
-        cv2.imwrite(f"test_output/s2-{uuid.uuid4().hex}.jpg", img)
+        imgName = f"test_output/res-{uuid.uuid4().hex}.jpg"
+        cv2.imwrite(imgName, frame.img)
+
+        data = {
+            "image_path": imgName,
+            "owner": frame.vehicleOwner,
+            "number": frame.licenseNumber
+        }
+
+        with open(f"test_output/{uuid.uuid4().hex}.json", "w") as f:
+            json.dump(data, f)

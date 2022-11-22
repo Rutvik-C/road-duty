@@ -2,3 +2,4 @@
 **/test
 **/test_output
 *.pth
+.env
