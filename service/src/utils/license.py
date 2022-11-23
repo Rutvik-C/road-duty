@@ -5,6 +5,11 @@ import os
 from src.utils.ocr import doOCR
 
 
+def validateLicenseNumber(number):
+    # TODO: Write validations
+    return True
+
+
 def detectLicense(ip, op, predictor):
     while True:
         if ip.empty():
@@ -13,13 +18,20 @@ def detectLicense(ip, op, predictor):
         print(f"INFO: DetectLicenseProcess: Detecting license plate in image.")
         frame = ip.get()
 
-        for data in predictor.getObjectsInImage(frame.img):
+        objData = predictor.getObjectsInImage(frame.img)
+        objData.sort(key=lambda record: record["score"])
+
+        if len(objData) > 0:
+            data = objData[-1]
             img = data["img"]
-            tmpLicenseImgPath = f"tmp/lp-{uuid.uuid4().hex}.jpg"
+            tmpLicenseImgPath = f"tmp/{uuid.uuid4().hex}.jpg"
             cv2.imwrite(tmpLicenseImgPath, img)
 
             licenseNumber = doOCR(tmpLicenseImgPath)
             os.remove(tmpLicenseImgPath)
 
-            # do this
-            op.put(frame)
+            if validateLicenseNumber(licenseNumber):
+                frame.licenseNumber = licenseNumber
+
+        print(f"INFO: DetectLicenseProcess: License number: '{frame.licenseNumber}'.")
+        op.put(frame)

@@ -10,9 +10,11 @@ def detectHelmet(ip, op, detector):
         print(f"INFO: DetectHelmetProcess: Detecting helmet in image.")
         frame = ip.get()
 
-        cv2.imwrite(f"test_output/hel-{uuid.uuid4().hex}.jpg", frame.img)
-
+        count = 0
         for data in detector.getObjectsInImage(frame.img):
-            if data["class"] == 1:
-                op.put(frame)
-                break
+            if data["class"] == 0:
+                count += 1
+
+        print(f"INFO: DetectHelmetProcess: Detected {count} helmets.")
+        if count == 0:
+            op.put(frame)

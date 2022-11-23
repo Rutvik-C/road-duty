@@ -9,5 +9,7 @@ def detectMotorcycle(ip, op, detector):
         print(f"INFO: DetectMotorcycleProcess: Detecting motorcycle in image.")
         frame = ip.get()
 
-        for data in detector.getObjectsInImage(frame.img):
-            op.put(Frame(data["img"], frame.location))
+        objData = detector.getObjectsInImage(frame.img)
+        for data in objData:
+            newFrame = Frame(data["img"], frame.location)
+            op.put(newFrame)

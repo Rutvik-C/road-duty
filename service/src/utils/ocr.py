@@ -1,12 +1,7 @@
-import json
-import requests
 import time
-import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
-from PIL import Image
+
+import requests
 from decouple import config
-import cv2
-import io
 
 
 def doOCR(imgPath):
@@ -21,16 +16,15 @@ def doOCR(imgPath):
     response.raise_for_status()
     operationUrl = response.headers["Operation-Location"]
 
-    res = {}
-    poll = True
-    while poll:
+    print(f"INFO: OCR: Request submitted. Waiting.")
+    while True:
         responseFinal = requests.get(operationUrl, headers=headers)
         res = responseFinal.json()
 
         if "analyzeResult" in res:
-            poll = False
+            break
         if "status" in res and res["status"] == "failed":
-            poll = False
+            return ""
 
         time.sleep(1)
 
@@ -40,7 +34,3 @@ def doOCR(imgPath):
         s += line["text"]
 
     return s
-
-
-print(doOCR(r"C:\# Everyday\RutvikLocal\1_PROJECTS\road-duty\service\test_output\lp-58405fe12226412aacaeb99afaa59773.jpg"))
-

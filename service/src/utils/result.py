@@ -1,24 +1,23 @@
 import uuid
 import cv2
 import json
+import requests
 
 
-def processResult(ip):
+def processResult(ip, config):
     while True:
         if ip.empty():
             continue
 
-        print(f"INFO: ResultProcess: Generating result.")
+        print(f"INFO: ResultProcess: Sending request.")
         frame = ip.get()
 
-        imgName = f"test_output/res-{uuid.uuid4().hex}.jpg"
-        cv2.imwrite(imgName, frame.img)
-
-        data = {
-            "image_path": imgName,
-            "owner": frame.vehicleOwner,
-            "number": frame.licenseNumber
+        payload = {
+            "license_number": frame.licenseNumber,
+            "image_url": "",
+            "location": frame.location
         }
 
-        with open(f"test_output/{uuid.uuid4().hex}.json", "w") as f:
-            json.dump(data, f)
+        print(payload)
+        # resp = requests.post(config["challan_endpoint"], json=payload)
+        # print(f"INFO: ResultProcess: Response: {resp}")

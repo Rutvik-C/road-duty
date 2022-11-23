@@ -3,3 +3,5 @@
 **/test_output
 *.pth
 .env
+test.py
+**/__pycache__
