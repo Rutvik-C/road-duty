@@ -34,7 +34,6 @@ class Detector:
     def getObjectsInImage(self, img):
         outputs = self.getOutput(img)
 
-        print(f"INFO: {self.name}: Extracting objects in image.")
         boxes = outputs["instances"].get_fields()["pred_boxes"]
         scores = outputs["instances"].get_fields()["scores"]
         pclasses = outputs["instances"].get_fields()["pred_classes"]
@@ -44,8 +43,13 @@ class Detector:
             tmp = {
                 "img": img[int(box[1]): int(box[3]), int(box[0]): int(box[2])],
                 "score": score,
-                "class": pclass
+                "class": pclass,
+                "x1": int(box[0]),
+                "x2": int(box[2]),
+                "y1": int(box[1]),
+                "y2": int(box[3]),
             }
             data.append(tmp)
 
+        print(f"INFO: {self.name}: Extracted {len(data)} objects.")
         return data

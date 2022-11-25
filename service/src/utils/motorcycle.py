@@ -1,10 +1,15 @@
+from src.classes.frame import Frame
+
+
 def detectMotorcycle(ip, op, detector):
     while True:
         if ip.empty():
             continue
 
         print(f"INFO: DetectMotorcycleProcess: Detecting motorcycle in image.")
-        img = ip.get()
+        frame = ip.get()
 
-        for data in detector.getObjectsInImage(img):
-            op.put(data["img"])
+        objData = detector.getObjectsInImage(frame.img)
+        for data in objData:
+            newFrame = Frame(data["img"], frame.location)
+            op.put(newFrame)
