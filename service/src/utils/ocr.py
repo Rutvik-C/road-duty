@@ -28,9 +28,13 @@ def doOCR(imgPath):
 
         time.sleep(1)
 
+    print(res)
     lines = res["analyzeResult"]["readResults"][0]["lines"]
     s = ""
+    add, count = 0, 0
     for line in lines:
         s += line["text"]
+        add += line["appearance"]["style"]["confidence"]
+        count += 1
 
-    return s
+    return s.strip(), add / count
