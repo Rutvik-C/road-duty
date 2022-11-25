@@ -1,3 +1,6 @@
 {
-  "challan_endpoint": ""
+  "challan_endpoint": "http://localhost:8000/challan",
+  "slide_margin_x": 0.2,
+  "slide_margin_y": 0.2,
+  "ocr_threshold": 0.8
 }
