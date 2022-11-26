@@ -1,5 +1,4 @@
 class Frame:
-    def __init__(self, img, location):
+    def __init__(self, idx, img):
+        self.id = idx
         self.img = img
-        self.location = location
-        self.licenseNumber = ""
