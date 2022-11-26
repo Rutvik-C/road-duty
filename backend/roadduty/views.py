@@ -35,7 +35,12 @@ class RiderViewSet(viewsets.ModelViewSet):
                 response = requests.get(vahan_endpoint)
                 # self.create(request=response.content)
                 print(response.json())
-                response_data = response.json()[0]
+                try:
+                    response_data = response.json()[0]
+                except:
+                    # no one with that license plate
+                    return None
+
                 data = {
                     "license_number": response_data["license_number"],
                     "name": response_data["name"],

@@ -25,11 +25,20 @@ def make_challan(license_number, location, manual_check, image_locs):
     BASE_URL = "http://127.0.0.1:8000/"
 
     endpoint = "challan/"
+    params = {"license_number": license_number}
 
+    rider_info = requests.get(BASE_URL + "rider", params=params)
+    rider_info = rider_info.json()
+
+    if rider_info == []:
+        # no such rider exists
+        return
+
+    rider_id = rider_info[0]['id']
     data = {
         "location": "7878788",
         "license_number": "0907876765",
-        "rider": get_rider_id_from_vahan_api(license_number),
+        "rider": rider_id,
         "status": "to_check_manually" if manual_check else "unpaid",
     }
     response = requests.post(url=BASE_URL + endpoint, data=data)
@@ -49,7 +58,7 @@ def make_challan(license_number, location, manual_check, image_locs):
 
 
 make_challan(
-    "1231", "loc", True,
+    "12312423", "loc", True,
     {"whole": [r'C:\Users\shubh\Downloads\hacktime demo\beach-quotes-1559667853.jpg'],
      "cutout": [r'C:\Users\shubh\Downloads\hacktime demo\beach-quotes-1559667853.jpg'],
      "bulk":
