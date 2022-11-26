@@ -33,6 +33,6 @@ def processResult(ip, config):
             "folder": folder
         }
 
-        print(payload)
+        print(f"INFO: ResultProcess: {payload}")
         # resp = requests.post(config["challan_endpoint"], json=payload)
         # print(f"INFO: ResultProcess: Response: {resp}")

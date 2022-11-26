@@ -1,6 +1,9 @@
 body {
     padding: 20px;
     letter-spacing: 1px;
+    background: url("./img/traffic-5.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .active {
