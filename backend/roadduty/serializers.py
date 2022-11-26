@@ -31,6 +31,12 @@ class RiderSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class VahanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vahan
+        fields = "__all__"
+
+
 class ChallanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challan

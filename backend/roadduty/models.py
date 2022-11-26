@@ -8,6 +8,7 @@ class Rider(models.Model):
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
+    license_number = models.CharField(max_length=50)
 
     def __str__(self):
         return str(self.name)
@@ -46,6 +47,16 @@ class ChallanImage(models.Model):
     type = models.CharField(max_length=50, choices=(
         ("whole", "whole"), ("cutout", "cutout"), ("bulk", "bulk")), default="bulk")
     image = models.ImageField(upload_to="images/")
+
+
+class Vahan(models.Model):
+    name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    license_number = models.CharField(max_length=50)
+
+    def __str__(self):
+        return str(self.name)
 
 
 """

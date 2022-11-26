@@ -12,11 +12,42 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from .custom_renders import JPEGRenderer, PNGRenderer
+import requests
 
 
 class RiderViewSet(viewsets.ModelViewSet):
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
+
+    def get_queryset(self):
+        license_number = self.request.query_params.get('license_number')
+        queryset = Rider.objects.all()
+        if license_number:
+            print(license_number)
+            print(license_number)
+            print(license_number)
+            print(license_number)
+            print(license_number)
+            queryset = Rider.objects.filter(license_number=license_number)
+            if queryset.count() == 0:
+                print("inn")
+                vahan_endpoint = f"http://127.0.0.1:8000/vahan/?license_number={license_number}"
+                response = requests.get(vahan_endpoint)
+                # self.create(request=response.content)
+                print(response.json())
+                response_data = response.json()[0]
+                data = {
+                    "license_number": response_data["license_number"],
+                    "name": response_data["name"],
+                    "email": response_data["email"],
+                    "phone": response_data["phone"],
+                }
+
+                serializer = self.get_serializer(data=data)
+                serializer.is_valid(raise_exception=True)
+                obj = serializer.save()
+                return Rider.objects.filter(license_number=license_number)
+        return queryset
 
 
 class ChallanImageViewSet(viewsets.ModelViewSet):
@@ -52,3 +83,16 @@ class ChallanViewSet(viewsets.ModelViewSet):
 class QueryViewSet(viewsets.ModelViewSet):
     queryset = Query.objects.all()
     serializer_class = QuerySerializer
+
+
+class VahanViewSet(viewsets.ModelViewSet):
+    queryset = Vahan.objects.all()
+    serializer_class = VahanSerializer
+
+    def get_queryset(self):
+        license_number = self.request.query_params.get('license_number')
+        queryset = Vahan.objects.all()
+        if license_number:
+            queryset = Vahan.objects.filter(license_number=license_number)
+            return queryset
+        return queryset

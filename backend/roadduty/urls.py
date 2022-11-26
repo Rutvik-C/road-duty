@@ -10,6 +10,7 @@ router.register(r'rider', RiderViewSet)
 router.register(r'query', QueryViewSet)
 router.register(r'challan', ChallanViewSet)
 router.register(r'challan_image', ChallanImageViewSet)
+router.register(r'vahan', VahanViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
