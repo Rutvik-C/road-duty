@@ -36,7 +36,7 @@ const Home = props => {
             state
           }}
         >
-          Register
+          Search
         </Link>
       </Form>
 

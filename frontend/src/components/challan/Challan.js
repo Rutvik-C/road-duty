@@ -1,7 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
-  
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBCardTitle,
+  MDBBtn,
+  MDBCardImage,
+  MDBRow,
+  MDBCol
+} from 'mdb-react-ui-kit';
+
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+
+import Cards from "../cards/Cards";
+import Image from "../image/Image";
+
+const LINKS = [
+  {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
+  {image: 'https://avatars.githubusercontent.com/u/69', id: 69},
+  {image: 'https://avatars.githubusercontent.com/u/100', id: 100},
+  {image: 'https://avatars.githubusercontent.com/u/6969', id: 6969},
+  {image: 'https://avatars.githubusercontent.com/u/1', id: 1}, 
+  {image: 'https://avatars.githubusercontent.com/u/3', id: 3}, 
+  {image: 'https://avatars.githubusercontent.com/u/4', id: 4}, 
+  {image: 'https://avatars.githubusercontent.com/u/5', id: 5},
+  {image: 'https://avatars.githubusercontent.com/u/6', id: 6},
+  {image: 'https://avatars.githubusercontent.com/u/7', id: 7},
+  {image: 'https://avatars.githubusercontent.com/u/111', id: 111},
+  {image: 'https://avatars.githubusercontent.com/u/123', id: 123},
+  {image: 'https://avatars.githubusercontent.com/u/1234', id: 1234},
+]
 
 const Challan = props => {
   const { challanId } = (props.location && props.location.state) || {};
@@ -13,10 +43,6 @@ const Challan = props => {
   const [rider, setRider] = useState("")
   const [image, setImage] = useState("")
   const [name, setName] = useState("")
-  const [phone, setPhone] = useState("")
-  const [email, setEmail] = useState("")
-
-  const IMAGE = "https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwbGFuZHNjYXBlc3xlbnwwfHwwfHw%3D&w=1000&q=80"
 
   console.log(props.location && props.location.state)
 
@@ -38,8 +64,6 @@ const Challan = props => {
       console.log("rider");
       console.log(content);
       setName(content.name);
-      setPhone(content.phone)
-      setEmail(content.email)
     })
 
     axios.get('http://127.0.0.1:8000/challan_image/?challan=' + challanId).then((res) => {
@@ -54,48 +78,57 @@ const Challan = props => {
         Go Back
       </NavLink>
       <hr />
-      <div>
-        <img src={IMAGE} alt="image not found" />
-      </div>
-      <div className="form-details d-flex justify-content-between">
-        <div>
-          <div>
-            <img src={image} alt="image not found" />
-          </div>
-        </div>
-        <div className="w-100 p-3">
-          <div>
-            <strong>Challan ID:</strong> {challanId}
-          </div>
-          <div>
-            <strong>License Number:</strong> {licenseNumber}
-          </div>
-          <div>
-            <strong>Status:</strong> {status}
-          </div>
-          <div>
-            <strong>Amount:</strong> {amount}
-          </div>
-          <div>
-            <strong>Date Time:</strong> {dateTime}
-          </div>
-          <div>
-            <strong>Challan ID:</strong> {challanId}
-          </div>
-          <div>
-            <strong>Locations:</strong> {locations}
-          </div>
-          <div>
-            <strong>Name:</strong> {name}
-          </div>
-          <div>
-            <strong>Phone:</strong> {phone}
-          </div>
-          <div>
-            <strong>E-mail:</strong> {email}
-          </div>
-        </div>        
-      </div>
+
+      <MDBCard className='m-3 p-3'>
+        <Carousel>
+          {LINKS.map((link) =>
+            <Image key={link.id} link={link.image} />
+          )}
+        </Carousel>
+        <MDBCardBody>
+          <MDBCardTitle>Card title</MDBCardTitle>
+          <MDBCard style={{ maxWidth: '100%' }}>
+          <MDBRow className='g-0'>
+            <MDBCol md='4'>
+              <MDBCardImage src={image} alt='...' fluid />
+            </MDBCol>
+            <MDBCol md='8'>
+              <MDBCardBody>
+                <MDBCard className="p-3">
+                  <Cards title="Challan ID" value={challanId} />
+                  <Cards title="License Number" value={licenseNumber} />
+                  <Cards title="Status" value={status} />
+                  <Cards title="Amount" value={amount} />
+                  <Cards title="Date Time" value={dateTime} />
+                  <Cards title="Location" value={locations} />
+                  <Cards title="Name" value={name} />
+                </MDBCard>
+              </MDBCardBody>
+            </MDBCol>
+          </MDBRow>
+        </MDBCard>
+
+        <MDBRow>
+          <MDBCol sm='6'>
+            <MDBCard alignment='center' className="m-3">
+              <MDBCardBody>
+                 <MDBBtn>Raise Query</MDBBtn>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+          <MDBCol sm='6'>
+            <MDBCard alignment='center' className="m-3">
+              <MDBCardBody>
+                <MDBBtn>Pay Now</MDBBtn>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+        </MDBRow>
+
+        </MDBCardBody>
+      </MDBCard>
+      
+
     </div>
   );
 };
