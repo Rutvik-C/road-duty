@@ -90,7 +90,7 @@ const Challan = props => {
           <MDBCard style={{ maxWidth: '100%' }}>
           <MDBRow className='g-0'>
             <MDBCol md='4'>
-              <MDBCardImage src={image} alt='...' fluid />
+              <MDBCardImage src={image} alt='...' fluid className="p-3" />
             </MDBCol>
             <MDBCol md='8'>
               <MDBCardBody>
