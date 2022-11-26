@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
+import datetime
 # Create your models here.
 
 
@@ -15,9 +16,10 @@ class Rider(models.Model):
 class Challan(models.Model):
     rider = models.ForeignKey(Rider, on_delete=CASCADE)
     license_number = models.CharField(max_length=50)
-    status = models.CharField(max_length=50)
-    amount = models.IntegerField(default=0)
-    date_time = models.DateTimeField(editable=False, null=True, blank=True)
+    status = models.CharField(max_length=50, choices=(
+        "unpaid", "to_check_manually", "query_raised", "paid"),  default="unpaid")
+    amount = models.IntegerField(default=2000, blank=True)
+    date_time = models.DateTimeField(editable=False, null=True, default=datetime.now)
     locations = models.CharField(max_length=50)
     # image_url = models.IntegerField(default=100)
 
@@ -26,7 +28,7 @@ class Challan(models.Model):
 
 
 class Query(models.Model):
-    challan = models.ForeignKey(Challan,  on_delete=CASCADE)
+    challan = models.ForeignKey(Challan, on_delete=CASCADE)
     issue = models.CharField(max_length=200)
     status = models.CharField(max_length=50)
 
@@ -36,6 +38,8 @@ class Query(models.Model):
 
 class ChallanImage(models.Model):
     challan = models.ForeignKey(Challan, on_delete=models.CASCADE, default=1)
+    type = models.CharField(max_length=50, choices=(
+        "whole", "cutout", "bulk"), default="bulk")
     image = models.ImageField(upload_to="images/")
 
 
