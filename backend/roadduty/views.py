@@ -24,30 +24,27 @@ class RiderViewSet(viewsets.ModelViewSet):
         queryset = Rider.objects.all()
         if license_number:
             print(license_number)
-            print(license_number)
-            print(license_number)
-            print(license_number)
-            print(license_number)
             queryset = Rider.objects.filter(license_number=license_number)
             if queryset.count() == 0:
                 print("inn")
                 vahan_endpoint = f"http://127.0.0.1:8000/vahan/?license_number={license_number}"
                 response = requests.get(vahan_endpoint)
                 # self.create(request=response.content)
-                print(response.json())
+                print("in rider", response.json())
                 try:
                     response_data = response.json()[0]
                 except:
                     # no one with that license plate
                     return None
-
+                print("Here here")
                 data = {
                     "license_number": response_data["license_number"],
                     "name": response_data["name"],
                     "email": response_data["email"],
                     "phone": response_data["phone"],
                 }
-
+                
+                print("data", data)
                 serializer = self.get_serializer(data=data)
                 serializer.is_valid(raise_exception=True)
                 obj = serializer.save()
@@ -108,4 +105,5 @@ class VahanViewSet(viewsets.ModelViewSet):
         if license_number:
             queryset = Vahan.objects.filter(license_number=license_number)
             return queryset
+        
         return queryset
