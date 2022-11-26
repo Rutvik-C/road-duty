@@ -84,6 +84,14 @@ class ChallanViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(self.get_serializer(obj).data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def get_queryset(self):
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = Challan.objects.filter(status=status)
+        else:
+            queryset = Challan.objects.all()
+        return queryset
+
 
 class QueryViewSet(viewsets.ModelViewSet):
     queryset = Query.objects.all()
