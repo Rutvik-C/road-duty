@@ -25,13 +25,28 @@ class ChallanImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         challan = self.request.query_params.get('challan')
-        queryset = ChallanImage.objects.filter(challan=challan)
+        image_type = self.request.query_params.get('type')
+        if challan:
+            queryset = ChallanImage.objects.filter(challan=challan)
+            if image_type:
+                queryset = queryset.filter(type=image_type)
+        else:
+            queryset = ChallanImage.objects.all()
+            if image_type:
+                queryset = queryset.filter(type=image_type)
         return queryset
 
 
 class ChallanViewSet(viewsets.ModelViewSet):
     queryset = Challan.objects.all()
     serializer_class = ChallanSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        obj = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(self.get_serializer(obj).data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class QueryViewSet(viewsets.ModelViewSet):
