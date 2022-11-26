@@ -32,9 +32,10 @@ const Home = props => {
         <Link
           className="btn btn-primary"
           to={{
-            pathname: "/challan",
+            pathname: `/challan/${state.challanId}`,
             state
           }}
+          activeClassName="current"
         >
           Search
         </Link>
