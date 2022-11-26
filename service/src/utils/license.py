@@ -8,7 +8,9 @@ from src.classes.detected_object import DetectedObject
 
 
 def validateLicenseNumber(number):
-    # TODO: Write validations
+    if number is None:
+        return False
+
     return True
 
 
@@ -42,7 +44,7 @@ def detectLicense(ip, op, predictor, config):
                 predictions.append([score, licenseNumber, i])
 
         predictions.sort(key=lambda record: record[0])
-        if len(predictions) == 0 or not validateLicenseNumber(predictions[-1][1]) and predictions[-1][0] >= config["ocr_threshold"]:
+        if len(predictions) == 0 and predictions[-1][0] >= config["ocr_threshold"]:
             print(f"INFO: DetectLicenseProcess: License number not detected.")
             packet.manualCheck = True
             op.put(packet)

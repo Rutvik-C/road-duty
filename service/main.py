@@ -3,6 +3,8 @@ from multiprocessing import Queue, Process
 import json
 import time
 import argparse
+import os
+from collections import deque
 
 from src.classes.detector import Detector
 from src.classes.packet import Packet
@@ -20,10 +22,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--type", type=str, required=True)
     parser.add_argument("--src", type=str, required=True)
+    parser.add_argument("--address", type=str, required=True)
 
     args = parser.parse_args()
     ipType = args.type
     ipSrc = args.src
+    address = args.address
 
     with open("config.json", "r") as f:
         config = json.load(f)
@@ -37,13 +41,9 @@ if __name__ == '__main__':
     detectHelmetOutputQueue = Queue()
     detectLicenseOutputQueue = Queue()
 
-    with open("test_output/test4.json", "r") as f:
-        data = json.load(f)
-
     motorcycleOptions = {
-        "track": False,
-        "detect": True,
-        "object_data": data
+        "track": False if ipType == "image" else True,
+        "detect": True
     }
 
     Process(name="motorcycle", target=detectMotorcycle, args=(inputQueue, detectMotorcycleOutputQueue, motorcycleDetector, motorcycleOptions)).start()
@@ -51,28 +51,34 @@ if __name__ == '__main__':
     Process(name="license", target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector, config)).start()
     Process(name="result", target=processResult, args=(detectLicenseOutputQueue, config)).start()
 
-    tmp = ["test/252_e.jpg"]
-
     print(f"INFO: Starting main loop.")
-    while True:
-        if len(tmp) > 0:
-            frame = Packet(len(tmp), cv2.imread(tmp.pop()), "Nanodiwadi Vasalai")
-            inputQueue.put(frame)
+    if ipType == "video":
+        print(f"INFO: Reading {ipSrc}")
+        cap = cv2.VideoCapture(ipSrc)
+        
+        count = 0
+        FRAME = 1
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if count % FRAME == 0:
+                if ret:
+                    inputQueue.put(Packet(count, frame, address))
+            count += 1
+        
+        while True:
+            time.sleep(10)
+    
+    elif ipType == "image":
+        images = deque()
+        for file in os.listdir(ipSrc):
+            print(f"INFO: Reading {ipSrc}/{file}")
+            images.append(f"{ipSrc}/{file}")
 
-        time.sleep(10)
-
-    # cap = cv2.VideoCapture("test/demo4.mp4")
-    #
-    # count = 0
-    # FRAME = 1
-    # while cap.isOpened():
-    #     ret, frame = cap.read()
-    #     if count % FRAME == 0:
-    #         if ret:
-    #             inputQueue.put(Packet(count, frame, ""))
-    #
-    #     count += 1
-    #
-    # print("Dead loop")
-    # while True:
-    #     pass
+        count = 0
+        while True:
+            if len(images) > 0:
+                frame = Packet(count, cv2.imread(images.popleft()), address)
+                inputQueue.put(frame)
+                count += 1
+            else:
+                time.sleep(10)
