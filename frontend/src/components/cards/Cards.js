@@ -8,7 +8,7 @@ import {
 
 export default function Cards({title, value}) {
   return (
-    <MDBCard className='m-1'>
+    <MDBCard className='m-3'>
         <MDBCardBody>
             <MDBCardTitle>{title}</MDBCardTitle>
             <MDBCardSubTitle>{value}</MDBCardSubTitle>

@@ -12,26 +12,8 @@ import {
 } from 'mdb-react-ui-kit';
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from 'react-responsive-carousel';
 
 import Cards from "../cards/Cards";
-import Image from "../image/Image";
-
-const LINKS = [
-  {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
-  {image: 'https://avatars.githubusercontent.com/u/69', id: 69},
-  {image: 'https://avatars.githubusercontent.com/u/100', id: 100},
-  {image: 'https://avatars.githubusercontent.com/u/6969', id: 6969},
-  {image: 'https://avatars.githubusercontent.com/u/1', id: 1}, 
-  {image: 'https://avatars.githubusercontent.com/u/3', id: 3}, 
-  {image: 'https://avatars.githubusercontent.com/u/4', id: 4}, 
-  {image: 'https://avatars.githubusercontent.com/u/5', id: 5},
-  {image: 'https://avatars.githubusercontent.com/u/6', id: 6},
-  {image: 'https://avatars.githubusercontent.com/u/7', id: 7},
-  {image: 'https://avatars.githubusercontent.com/u/111', id: 111},
-  {image: 'https://avatars.githubusercontent.com/u/123', id: 123},
-  {image: 'https://avatars.githubusercontent.com/u/1234', id: 1234},
-]
 
 const Challan = props => {
   const { challanId } = (props.location && props.location.state) || {};
@@ -70,21 +52,17 @@ const Challan = props => {
       console.log(res.data[0].image);
       setImage(res.data[0].image);
     })
+    console.log("amount:" + amount);
   });
 
   return (
     <div>
-      <NavLink to="/" activeClassName="active">
+      <NavLink to="/">
         Go Back
       </NavLink>
       <hr />
 
       <MDBCard className='m-3 p-3'>
-        <Carousel>
-          {LINKS.map((link) =>
-            <Image key={link.id} link={link.image} />
-          )}
-        </Carousel>
         <MDBCardBody>
           <MDBCardTitle>Card title</MDBCardTitle>
           <MDBCard style={{ maxWidth: '100%' }}>
@@ -127,8 +105,6 @@ const Challan = props => {
 
         </MDBCardBody>
       </MDBCard>
-      
-
     </div>
   );
 };

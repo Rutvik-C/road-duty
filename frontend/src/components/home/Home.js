@@ -35,7 +35,7 @@ const Home = props => {
             pathname: `/challan/${state.challanId}`,
             state
           }}
-          activeClassName="current"
+          // activeClassName="current"
         >
           Search
         </Link>
