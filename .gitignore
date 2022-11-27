@@ -8,3 +8,5 @@ test.py
 */env
 **/tmp
 **/input
+*.sqlite3
+**/media
