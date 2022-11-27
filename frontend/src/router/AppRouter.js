@@ -10,9 +10,9 @@ const AppRouter = () => (
     <div className="container">
       <Switch>
         <Route component={Home} path="/" exact={true} />
-        <Route component={Challan} path="/challan" />
+        <Route component={Challan} path="/challan/:challanId" />
         <Route component={Check} path="/check" exact />
-        <Route component={Carousal} path="/check/:id" />
+        <Route component={Carousal} path="/check/:challanId" />
       </Switch>
     </div>
   </BrowserRouter>

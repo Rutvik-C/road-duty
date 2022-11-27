@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   MDBCard,
   MDBCardBody,
@@ -23,7 +23,6 @@ const LINKS = [
 ]
 
 export default function Check() {
-  const [challanId, setChallanId] = useState("");
   return (
     <div>
         <MDBCard className='m-3 p-3'>
@@ -36,13 +35,10 @@ export default function Check() {
                               <MDBCardTitle>{link.id}</MDBCardTitle>
                               <Link
                                 className="btn btn-primary"
-                                onClick={() => setChallanId(link.id)}
                                 to={{
                                     pathname: `/check/${link.id}`,
-                                    challanId
                                 }}
                                 activeClassName="current"
-                                challanId={challanId}
                               >
                                 Go
                             </Link>
