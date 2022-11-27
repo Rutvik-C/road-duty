@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import axios from 'axios';
 import {
   MDBCard,
@@ -16,7 +16,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Cards from "../cards/Cards";
 
 const Challan = props => {
-  const { challanId } = (props.location && props.location.state) || {};
   const [licenseNumber, setLicenseNumber] = useState("")
   const [status, setStatus] = useState("")
   const [amount, setAmount] = useState(0)
@@ -26,7 +25,7 @@ const Challan = props => {
   const [image, setImage] = useState("")
   const [name, setName] = useState("")
 
-  console.log(props.location && props.location.state)
+  const { challanId } = useParams();
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/challan/' + challanId).then((res) => {

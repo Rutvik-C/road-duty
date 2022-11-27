@@ -2,6 +2,7 @@ import React from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Image from '../image/Image';
+import { useParams } from 'react-router-dom';
 
 const LINKS = [
   {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
@@ -19,7 +20,9 @@ const LINKS = [
   {image: 'https://avatars.githubusercontent.com/u/1234', id: 1234},
 ]
 
-export default function Carousal({challanId}) {
+export default function Carousal() {
+  // eslint-disable-next-line
+  const { challanId } = useParams();    // this challanId will be used when we will be making the api calls, as of now no use, as we are showing constant carousal
   return (
     <div>
         <Carousel>
