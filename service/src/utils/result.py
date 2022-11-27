@@ -62,4 +62,7 @@ def processResult(ip, config):
             cv2.imwrite(f"{folder}/vehicle.jpg", vehicle)
             imageLocs["cutout"].append(f"{folder}/vehicle.jpg")
 
-        makeChallan(config, packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
+        try:
+            makeChallan(config, packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
+        except Exception as e:
+            print(f"ERROR: ResultProcess: {e}.")
