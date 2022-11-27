@@ -23,6 +23,7 @@ const Challan = props => {
   const [locations, setLocations] = useState("")
   const [rider, setRider] = useState("")
   const [image, setImage] = useState("")
+  const [imageWhole, setImageWhole] = useState("")
   const [name, setName] = useState("")
 
   const { challanId } = useParams();
@@ -47,7 +48,11 @@ const Challan = props => {
       setName(content.name);
     })
 
-    axios.get('http://127.0.0.1:8000/challan_image/?challan=' + challanId).then((res) => {
+    axios.get(`http://127.0.0.1:8000/challan_image/?challan=${challanId}&type=whole`).then((res) => {
+      console.log(res.data[0].image);
+      setImageWhole(res.data[0].image);
+    })
+    axios.get(`http://127.0.0.1:8000/challan_image/?challan=${challanId}&type=cutout`).then((res) => {
       console.log(res.data[0].image);
       setImage(res.data[0].image);
     })
@@ -62,6 +67,8 @@ const Challan = props => {
       <hr />
 
       <MDBCard className='m-3 p-3'>
+        <MDBCardImage src={imageWhole} alt='...' fluid />
+
         <MDBCardBody>
           <MDBCardTitle>Card title</MDBCardTitle>
           <MDBCard style={{ maxWidth: '100%' }}>
