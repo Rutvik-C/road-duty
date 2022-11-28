@@ -81,7 +81,9 @@ if __name__ == '__main__':
             ret, frame = cap.read()
             if count % FRAME == 0:
                 if ret:
-                    inputQueue.put(Packet(count, frame, address))
+                    imgLoc = f"tmp/motorcycle_queue/{count}.jpg"
+                    cv2.imwrite(imgLoc, frame)
+                    inputQueue.put(Packet(count, imgLoc, address))
                     count += 1
         
         while True:
@@ -96,8 +98,8 @@ if __name__ == '__main__':
         count = 0
         while True:
             if len(images) > 0:
-                frame = Packet(count, cv2.imread(images.popleft()), address)
-                inputQueue.put(frame)
+                imgLoc = images.popleft()
+                inputQueue.put(Packet(count, imgLoc, address))
                 count += 1
             else:
                 time.sleep(10)

@@ -21,16 +21,16 @@ def detectMotorcycle(ip, op, detector, options):
         packet = ip.get()
         trackWithSuccessor = {}
 
-        objData = detector.getObjectsInImage(packet.img) if options["detect"] else options["precomputed_data"][packet.frameId]
+        objData = detector.getObjectsInImage(cv2.imread(packet.imgLoc)) if options["detect"] else options["precomputed_data"][packet.frameId]
         for data in objData:
-            do = DetectedObject(packet.img, data["x1"], data["x2"], data["y1"], data["y2"])
+            do = DetectedObject(packet.imgLoc, data["x1"], data["x2"], data["y1"], data["y2"])
             centerX = (do.x1 + do.x2) // 2
             centerY = (do.y1 + do.y2) // 2
 
             if not options["track"]:
                 newTrack = Track(trackCount)
                 newTrack.addTrackFragment(centerX, centerY, do)
-                op.put(Packet(-1, packet.img, packet.location, newTrack))
+                op.put(Packet(-1, packet.imgLoc, packet.location, newTrack))
                 trackCount += 1
                 continue
 
@@ -51,7 +51,6 @@ def detectMotorcycle(ip, op, detector, options):
                 tracks.append(newTrack)
                 trackWithSuccessor[newTrack.id] = True
                 trackCount += 1
-
                 print(f"INFO: DetectMotorcycleProcess: Not in vicinity. Creating new track {newTrack.id}")
 
         if options["track"]:
@@ -60,7 +59,7 @@ def detectMotorcycle(ip, op, detector, options):
                 if tracks[i].id not in trackWithSuccessor:
                     print(f"INFO: DetectMotorcycleProcess: Journey of {tracks[i].id} ended")
                     if tracks[i].isValid():
-                        op.put(Packet(-1, packet.img, packet.location, tracks[i]))
+                        op.put(Packet(-1, packet.imgLoc, packet.location, tracks[i]))
 
                         os.mkdir(f"test_output/{tracks[i].id}")
                         for idx, do in enumerate(tracks[i].journey):
@@ -68,4 +67,3 @@ def detectMotorcycle(ip, op, detector, options):
 
                     del tracks[i]
                 i += 1
-
