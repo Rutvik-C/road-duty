@@ -58,7 +58,7 @@ def make_challan(license_number, location, manual_check, image_locs):
 
 
 make_challan(
-    "12312423", "loc", True,
+    "4321", "loc", True,
     {"whole": [r'C:\Users\shubh\Downloads\hacktime demo\beach-quotes-1559667853.jpg'],
      "cutout": [r'C:\Users\shubh\Downloads\hacktime demo\beach-quotes-1559667853.jpg'],
      "bulk":
