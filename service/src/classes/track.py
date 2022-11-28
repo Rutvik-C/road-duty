@@ -3,8 +3,8 @@ import uuid
 
 
 class Track:
-    def __init__(self):
-        self.id = uuid.uuid4().hex
+    def __init__(self, idx):
+        self.id = idx  # uuid.uuid4().hex
         self.x = 0
         self.y = 0
         self.journey = []
