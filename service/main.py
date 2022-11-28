@@ -23,11 +23,15 @@ if __name__ == '__main__':
     parser.add_argument("--type", type=str, required=True)
     parser.add_argument("--src", type=str, required=True)
     parser.add_argument("--address", type=str, required=True)
+    parser.add_argument("--usePrecomputed", action="store_true")
+    parser.add_argument("--precomputedSrc", type=str)
 
     args = parser.parse_args()
     ipType = args.type
     ipSrc = args.src
     address = args.address
+    detect = args.usePrecomputed
+    precomputedSrc = args.precomputedSrc
 
     with open("config.json", "r") as f:
         config = json.load(f)

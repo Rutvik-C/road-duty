@@ -41,7 +41,6 @@ class Detector:
 
         for box, score, pclass in zip(boxes, scores, pclasses):
             tmp = {
-                "img": img[int(box[1]): int(box[3]), int(box[0]): int(box[2])],
                 "score": score,
                 "class": pclass,
                 "x1": int(box[0]),

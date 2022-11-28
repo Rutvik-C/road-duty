@@ -1,5 +1,7 @@
 {
-  "challan_endpoint": "http://localhost:8000/challan",
+  "rider_endpoint": "http://127.0.0.1:8000/rider/",
+  "challan_endpoint": "http://localhost:8000/challan/",
+  "challan_img_endpoint": "http://127.0.0.1:8000/challan_image/",
   "slide_margin_x": 0.2,
   "slide_margin_y": 0.2,
   "ocr_threshold": 0.8

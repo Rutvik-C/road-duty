@@ -9,7 +9,7 @@ def get_rider_id_from_vahan_api(license_number):
     return 1
 
 
-def make_challan(license_number, location, manual_check, image_locs):
+def makeChallan(license_number, location, manual_check, image_locs):
     """calls drf to make challan
 
     Args:
