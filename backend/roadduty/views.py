@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -23,10 +24,8 @@ class RiderViewSet(viewsets.ModelViewSet):
         license_number = self.request.query_params.get('license_number')
         queryset = Rider.objects.all()
         if license_number:
-            print(license_number)
             queryset = Rider.objects.filter(license_number=license_number)
             if queryset.count() == 0:
-                print("inn")
                 vahan_endpoint = f"http://127.0.0.1:8000/vahan/?license_number={license_number}"
                 response = requests.get(vahan_endpoint)
                 # self.create(request=response.content)
@@ -43,7 +42,7 @@ class RiderViewSet(viewsets.ModelViewSet):
                     "email": response_data["email"],
                     "phone": response_data["phone"],
                 }
-                
+
                 print("data", data)
                 serializer = self.get_serializer(data=data)
                 serializer.is_valid(raise_exception=True)
@@ -75,7 +74,24 @@ class ChallanViewSet(viewsets.ModelViewSet):
     serializer_class = ChallanSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        print(request.data)
+        new_data = json.dumps(request.data)
+        new_data = json.loads(new_data)
+        print(new_data, type(new_data))
+        if not 'rider' in request.data:
+            params = {"license_number": new_data['license_number']}
+            rider_info = requests.get("http://127.0.0.1:8000/" + "rider", params=params)
+            rider_info = rider_info.json()
+
+            if rider_info == []:
+                # no such rider exists
+                return
+            new_data['rider'] = rider_info[0]['id']
+            # obj = Rider.objects.filter(license_number=request.data['license_number'])
+            # print(obj.first().pk)
+            # new_data['rider'] = obj.first().pk
+        # serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=new_data)
         serializer.is_valid(raise_exception=True)
         obj = serializer.save()
         headers = self.get_success_headers(serializer.data)
@@ -105,5 +121,5 @@ class VahanViewSet(viewsets.ModelViewSet):
         if license_number:
             queryset = Vahan.objects.filter(license_number=license_number)
             return queryset
-        
+
         return queryset

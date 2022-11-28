@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, Link } from "react-router-dom";
 import axios from 'axios';
 import {
   MDBCard,
   MDBCardBody,
   MDBCardTitle,
-  MDBBtn,
   MDBCardImage,
   MDBRow,
   MDBCol
@@ -14,6 +13,7 @@ import {
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import Cards from "../cards/Cards";
+import { Button } from "react-bootstrap";
 
 const Challan = props => {
   const [licenseNumber, setLicenseNumber] = useState("")
@@ -25,6 +25,7 @@ const Challan = props => {
   const [image, setImage] = useState("")
   const [imageWhole, setImageWhole] = useState("")
   const [name, setName] = useState("")
+  const [isPaid, setIsPaid] = useState("Pay Now")
 
   const { challanId } = useParams();
 
@@ -39,6 +40,10 @@ const Challan = props => {
       setDateTime(content.date_time)
       setLocations(content.locations)
       setRider(content.rider)
+
+      if (content.status === "paid") {
+        setIsPaid("Paid")
+      }
     })
 
     axios.get('http://127.0.0.1:8000/rider/' + rider).then((res) => {
@@ -59,9 +64,19 @@ const Challan = props => {
     console.log("amount:" + amount);
   });
 
+  const handleClick = (event) => {
+    axios.get('http://127.0.0.1:8000/challan/' + challanId).then((res) => {
+        const content = res.data;
+        content.status = "paid";
+
+        // sending put request to the server to change the status to paid
+        axios.put('http://127.0.0.1:8000/challan/' + challanId, content);
+    })
+  }
+
   return (
     <div>
-      <NavLink to="/">
+      <NavLink to="/" style={{color:"whitesmoke"}}>
         Go Back
       </NavLink>
       <hr />
@@ -96,14 +111,22 @@ const Challan = props => {
           <MDBCol sm='6'>
             <MDBCard alignment='center' className="m-3">
               <MDBCardBody>
-                 <MDBBtn>Raise Query</MDBBtn>
+                <Link
+                  className="btn btn-primary"
+                  to={{
+                    pathname: `/query/${challanId}`,
+                  }}
+                  // activeClassName="current"
+                >
+                  Raise Query
+                </Link>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
           <MDBCol sm='6'>
             <MDBCard alignment='center' className="m-3">
               <MDBCardBody>
-                <MDBBtn>Pay Now</MDBBtn>
+                <Button onClick={handleClick}>{isPaid}</Button>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
