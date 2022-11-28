@@ -1,10 +1,9 @@
 import React from 'react'
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-} from 'mdb-react-ui-kit';
-import { Link } from 'react-router-dom';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import Image from '../image/Image';
+import { useParams } from 'react-router-dom';
+import { Button, Form } from 'react-bootstrap';
 
 const LINKS = [
   {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
@@ -23,31 +22,38 @@ const LINKS = [
 ]
 
 export default function Check() {
+  // eslint-disable-next-line
+  const { challanId } = useParams();    // this challanId will be used when we will be making the api calls, as of now no use, as we are showing constant carousal
+
+  const handleClickSubmit = () => {
+
+  }
+
+  const handleClickInvalid = () => {
+    
+  }
+
   return (
     <div>
-        <MDBCard className='m-3 p-3'>
-            <MDBCardBody>
-                <MDBCardTitle>Card title</MDBCardTitle>
-                    {LINKS.map((link) =>
-                      <MDBCard style={{ maxWidth: '100%' }} >
-                        <MDBCard className='m-3'>
-                          <MDBCardBody className="d-flex justify-content-between">
-                              <MDBCardTitle>{link.id}</MDBCardTitle>
-                              <Link
-                                className="btn btn-primary"
-                                to={{
-                                    pathname: `/check/${link.id}`,
-                                }}
-                                activeClassName="current"
-                              >
-                                Go
-                            </Link>
-                          </MDBCardBody>
-                        </MDBCard>
-                      </MDBCard>
-                    )}
-            </MDBCardBody>
-        </MDBCard>
+        <Carousel>
+          {LINKS.map((link) =>
+            <Image key={link.id} link={link.image} />
+          )}
+        </Carousel>
+        <Form>
+            <Form.Group className="mb-3">
+                {/* <Form.Label style={{color:"white", fontWeight:"bold"}}>Number Plate</Form.Label> */}
+                <Form.Control placeholder="License Plate Number" />
+            </Form.Group>
+
+            <Button className='mr-2' onClick={handleClickSubmit}>
+                Submit
+            </Button>
+
+            <Button variant="danger" className='m-2' onClick={handleClickInvalid}>
+                Invalid
+            </Button>
+      </Form>
     </div>
   )
 }

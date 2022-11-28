@@ -20,7 +20,7 @@ const Home = props => {
       <h1>Road Duty</h1>
       <Form className="register-form">
         <Form.Group controlId="username">
-          <Form.Label>Challan ID</Form.Label>
+          <Form.Label style={{fontWeight: "bold"}}>Challan ID</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter Challan ID"
