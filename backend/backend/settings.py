@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import json
-email_password = "ufngpfmzobbzpycs"
+email_password = "pouozkgbicslbras"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

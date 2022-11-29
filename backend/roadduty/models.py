@@ -16,7 +16,7 @@ class Rider(models.Model):
 
 class Challan(models.Model):
     rider = models.ForeignKey(Rider, on_delete=CASCADE, null=True)
-    license_number = models.CharField(max_length=50)
+    license_number = models.CharField(max_length=50, blank=True)
     status = models.CharField(
         max_length=50,
         choices=(("unpaid", "unpaid"),
