@@ -10,3 +10,4 @@ test.py
 **/input
 *.sqlite3
 **/media
+**/confidential_keys.json

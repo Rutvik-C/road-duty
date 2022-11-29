@@ -15,17 +15,18 @@ class Rider(models.Model):
 
 
 class Challan(models.Model):
-    rider = models.ForeignKey(Rider, on_delete=CASCADE, null = True)
+    rider = models.ForeignKey(Rider, on_delete=CASCADE, null=True)
     license_number = models.CharField(max_length=50)
     status = models.CharField(
         max_length=50,
         choices=(("unpaid", "unpaid"),
                  ("to_check_manually", "to_check_manually"),
                  ("query_raised", "query_raised"),
+                 ("invalid", "invalid"),
                  ("paid", "paid")),
         default="unpaid")
     amount = models.IntegerField(default=2000, null=True, blank=True)
-    date_time = models.DateTimeField(default=datetime.now)
+    date_time = models.DateTimeField(default=datetime.now, null=True)
     location = models.CharField(max_length=50)
     # image_url = models.IntegerField(default=100)
 
