@@ -9,13 +9,16 @@ def detectHelmet(ip, op, detector, options):
             time.sleep(1)
             continue
 
-        print(f"INFO: DetectHelmetProcess: Detecting helmet in image.")
+        if not options["detect"]:
+            continue
+
         packet = ip.get()
         track = packet.track
+        print(f"INFO: DetectHelmetProcess: Detecting helmet in track {track.id}.")
 
         total, positive = 0, 0
         for idx, do in enumerate(track.journey):
-            objData = detector.getObjectsInImage(do.getCroppedImage()) if options["detect"] else options["precomputed_data"][str(track.id)][idx]
+            objData = detector.getObjectsInImage(do.getCroppedImage())
 
             count = 0
             for data in objData:
@@ -26,7 +29,6 @@ def detectHelmet(ip, op, detector, options):
                 positive += 1
             total += 1
 
-        print(f"INFO: DetectHelmetProcess: Helmet not found in {positive}/{total} instances.")
+        print(f"INFO: DetectHelmetProcess: Violation in {positive}/{total} instances.")
         if positive >= 0.75 * total:
-            print(f"Sending packet {track.id} to next")
-            # op.put(packet)
+            op.put(packet)

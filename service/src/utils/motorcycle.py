@@ -21,23 +21,21 @@ def detectMotorcycle(ip, op, detector, options):
         packet = ip.get()
         trackWithSuccessor = {}
 
-        objData = detector.getObjectsInImage(packet.img) if options["detect"] else options["precomputed_data"][packet.frameId]
+        objData = detector.getObjectsInImage(cv2.imread(packet.imgLoc)) if options["detect"] else options["precomputed_data"][packet.frameId]
         for data in objData:
-            do = DetectedObject(packet.img, data["x1"], data["x2"], data["y1"], data["y2"])
+            do = DetectedObject(packet.imgLoc, data["x1"], data["x2"], data["y1"], data["y2"])
             centerX = (do.x1 + do.x2) // 2
             centerY = (do.y1 + do.y2) // 2
 
             if not options["track"]:
                 newTrack = Track(trackCount)
                 newTrack.addTrackFragment(centerX, centerY, do)
-                op.put(Packet(-1, packet.img, packet.location, newTrack))
+                op.put(Packet(-1, packet.imgLoc, packet.location, newTrack))
                 trackCount += 1
                 continue
 
             isInVicinity = False
             for track in tracks:
-                # print(f"Track centered at {track.x}, {track.y} with rx={track.rx} ry={track.ry}")
-
                 if track.id not in trackWithSuccessor and track.isClose(centerX, centerY):
                     print(f"INFO: DetectMotorcycleProcess: {track.id} is close. Adding to existing")
                     track.addTrackFragment(centerX, centerY, do)
@@ -51,7 +49,6 @@ def detectMotorcycle(ip, op, detector, options):
                 tracks.append(newTrack)
                 trackWithSuccessor[newTrack.id] = True
                 trackCount += 1
-
                 print(f"INFO: DetectMotorcycleProcess: Not in vicinity. Creating new track {newTrack.id}")
 
         if options["track"]:
@@ -60,12 +57,12 @@ def detectMotorcycle(ip, op, detector, options):
                 if tracks[i].id not in trackWithSuccessor:
                     print(f"INFO: DetectMotorcycleProcess: Journey of {tracks[i].id} ended")
                     if tracks[i].isValid():
-                        op.put(Packet(-1, packet.img, packet.location, tracks[i]))
+                        op.put(Packet(-1, packet.imgLoc, packet.location, tracks[i]))
 
-                        os.mkdir(f"test_output/{tracks[i].id}")
+                        folder = f"tmp/tracks/{tracks[i].id}"
+                        os.mkdir(folder)
                         for idx, do in enumerate(tracks[i].journey):
-                            cv2.imwrite(f"test_output/{tracks[i].id}/{idx}.jpg", do.getCroppedImage())
+                            cv2.imwrite(f"{folder}/{idx}.jpg", do.getCroppedImage())
 
                     del tracks[i]
                 i += 1
-

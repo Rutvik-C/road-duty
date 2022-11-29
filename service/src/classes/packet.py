@@ -1,7 +1,7 @@
 class Packet:
-    def __init__(self, frameId, img, location, track=None):
+    def __init__(self, frameId, imgLoc, location, track=None):
         self.frameId = frameId
-        self.img = img
+        self.imgLoc = imgLoc
         self.track = track
 
         self.location = location

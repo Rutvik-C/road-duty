@@ -10,7 +10,7 @@ class Track:
         self.journey = []
         self.rx = 0
         self.ry = 0
-
+        
         with open("config.json", "r") as f:
             config = json.load(f)
             self.slideMarginX = config["slide_margin_x"]
