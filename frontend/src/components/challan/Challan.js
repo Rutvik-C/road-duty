@@ -70,7 +70,8 @@ const Challan = props => {
         content.status = "paid";
 
         // sending put request to the server to change the status to paid
-        axios.put('http://127.0.0.1:8000/challan/' + challanId, content);
+        axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content);
+        setIsPaid("Paid")
     })
   }
 
@@ -114,7 +115,7 @@ const Challan = props => {
                 <Link
                   className="btn btn-primary"
                   to={{
-                    pathname: `/query/${challanId}`,
+                    pathname: `/raise_query/${challanId}`,
                   }}
                   // activeClassName="current"
                 >

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Image from '../image/Image';
 import { useParams } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 const LINKS = [
   {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
@@ -25,12 +26,25 @@ export default function Check() {
   // eslint-disable-next-line
   const { challanId } = useParams();    // this challanId will be used when we will be making the api calls, as of now no use, as we are showing constant carousal
 
-  const handleClickSubmit = () => {
+  const [numberPlate, setNumberPlate] = useState("");
 
+  const handleClickSubmit = () => {
+    axios.get(`http://127.0.0.1:8000/challan/${challanId}/`).then((res) => {
+      const content = res.data;
+      content.license_number = numberPlate
+      content.status = "unpaid"
+
+      axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
+    })
   }
 
   const handleClickInvalid = () => {
-    
+    axios.get(`http://127.0.0.1:8000/challan/${challanId}/`).then((res) => {
+      const content = res.data;
+      content.status = "invalid"
+
+      axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
+    })
   }
 
   return (
@@ -43,7 +57,7 @@ export default function Check() {
         <Form>
             <Form.Group className="mb-3">
                 {/* <Form.Label style={{color:"white", fontWeight:"bold"}}>Number Plate</Form.Label> */}
-                <Form.Control placeholder="License Plate Number" />
+                <Form.Control type="text" placeholder="License Plate Number" name="licensePlateNumber" onChange={(event) => setNumberPlate(event.target.value)} />
             </Form.Group>
 
             <Button className='mr-2' onClick={handleClickSubmit}>
