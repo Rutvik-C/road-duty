@@ -6,33 +6,22 @@ import os
 from collections import defaultdict
 
 
-def makeChallan(config, license_number, location, manual_check, image_locs):
-    params = {"license_number": license_number}
-    rider_info = requests.get(config["rider_endpoint"], params=params)
-    print(f"rider {rider_info}")
-    rider_info = rider_info.json()
-    if rider_info == []:
-        print(f"INFO: ResultProcess: Vehicle not registered.")
-        return 
-
-    rider_id = rider_info[0]['id']
+def makeChallan(config, licenseNumber, location, manualCheck, imageLocs):
     data = {
         "location": location,
-        "license_number": license_number,
-        "rider": rider_id,
-        "status": "to_check_manually" if manual_check else "unpaid",
+        "license_number": licenseNumber,
+        "status": "to_check_manually" if manualCheck else "unpaid",
     }
     response = requests.post(url=config["challan_endpoint"], data=data)
-    print("create", response)
     new_challan_id = response.json()["id"]
     print(f"INFO: ResultProcess: Challan created.")
 
-    for key in image_locs:
+    for key in imageLocs:
         payload = {'challan': str(new_challan_id), 'type': key}
-        for i, image_loc in enumerate(image_locs[key]):
-            files = [('image', (f'{i}.jpg', open(image_loc, 'rb'), 'image/jpeg'))]
+        for i, imageLoc in enumerate(imageLocs[key]):
+            files = [('image', (f'{i}.jpg', open(imageLoc, 'rb'), 'image/jpeg'))]
             response = requests.post(config["challan_img_endpoint"], data=payload, files=files)
-            print("image", response)
+
     print(f"INFO: ResultProcess: Images uploaded.")
 
 
@@ -44,7 +33,7 @@ def processResult(ip, config):
         print(f"INFO: ResultProcess: Sending request.")
         packet = ip.get()
 
-        folder = f"media/{packet.track.id}"
+        folder = f"tmp/result/{packet.track.id}"
         os.mkdir(folder)
 
         imageLocs = defaultdict(lambda: [])
@@ -62,6 +51,7 @@ def processResult(ip, config):
             cv2.imwrite(f"{folder}/vehicle.jpg", vehicle)
             imageLocs["cutout"].append(f"{folder}/vehicle.jpg")
 
+        # print(packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
         try:
             makeChallan(config, packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
         except Exception as e:

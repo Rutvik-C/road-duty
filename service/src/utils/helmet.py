@@ -28,5 +28,4 @@ def detectHelmet(ip, op, detector, options):
 
         print(f"INFO: DetectHelmetProcess: Violation in {positive}/{total} instances.")
         if positive >= 0.75 * total:
-            print(f"Hey Hey. Sending packet {track.id} to next")
-            # op.put(packet)
+            op.put(packet)

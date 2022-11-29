@@ -23,6 +23,9 @@ def detectLicense(ip, op, predictor, config):
         print(f"INFO: DetectLicenseProcess: Detecting license plate in image.")
         packet = ip.get()
         track = packet.track
+        
+        folder = f"tmp/license_plate/{track.id}"
+        os.mkdir(folder)
 
         predictions = []
         for i, do in enumerate(track.journey):
@@ -32,13 +35,15 @@ def detectLicense(ip, op, predictor, config):
                 continue
 
             objData.sort(key=lambda record: record["score"])
-            doLicensePlate = DetectedObject(img, objData[-1]["x1"], objData[-1]["x2"], objData[-1]["y1"], objData[-1]["y2"])
+            
+            imgLoc = f"{folder}/{i}.jpg"
+            cv2.imwrite(imgLoc, img)
+            doLicensePlate = DetectedObject(imgLoc, objData[-1]["x1"], objData[-1]["x2"], objData[-1]["y1"], objData[-1]["y2"])
 
-            tmpLicenseImgPath = f"tmp/{uuid.uuid4().hex}.jpg"
+            tmpLicenseImgPath = f"{folder}/cropped_{i}.jpg"
             cv2.imwrite(tmpLicenseImgPath, doLicensePlate.getCroppedImage())
 
             licenseNumber, score = doOCR(tmpLicenseImgPath)
-            os.remove(tmpLicenseImgPath)
 
             if validateLicenseNumber(licenseNumber):
                 predictions.append([score, licenseNumber, i])
