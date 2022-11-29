@@ -45,11 +45,6 @@ export default function Check() {
   
   return (
     <div>
-        <Carousel>
-          {images.map((image) =>
-            <Image key={image.id} link={image.image} />
-          )}
-        </Carousel>
         <Form>
             <Form.Group className="mb-3">
                 {/* <Form.Label style={{color:"white", fontWeight:"bold"}}>Number Plate</Form.Label> */}
@@ -64,6 +59,11 @@ export default function Check() {
                 Invalid
             </Button>
       </Form>
+      <Carousel>
+          {images.map((image) =>
+            <Image key={image.id} link={image.image} />
+          )}
+        </Carousel>
     </div>
   )
 }

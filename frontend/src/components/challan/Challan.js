@@ -38,7 +38,7 @@ const Challan = props => {
       setStatus(content.status)
       setAmount(content.amount)
       setDateTime(content.date_time)
-      setLocations(content.locations)
+      setLocations(content.location)
       setRider(content.rider)
 
       if (content.status === "paid") {
