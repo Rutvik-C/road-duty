@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import json
-email_password = "None"
+email_password = "ufngpfmzobbzpycs"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -161,6 +161,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 # EMAIL_HOST_USER = 'email.from.machine.here@gmail.com'
-EMAIL_HOST_USER = 'shubh67678@gmail.com'
+EMAIL_HOST_USER = 'teamroadduty@gmail.com'
 EMAIL_HOST_PASSWORD = email_password
 EMAIL_USE_TLS = True
