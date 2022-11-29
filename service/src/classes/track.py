@@ -3,14 +3,14 @@ import uuid
 
 
 class Track:
-    def __init__(self):
-        self.id = uuid.uuid4().hex
+    def __init__(self, idx):
+        self.id = idx  # uuid.uuid4().hex
         self.x = 0
         self.y = 0
         self.journey = []
         self.rx = 0
         self.ry = 0
-
+        
         with open("config.json", "r") as f:
             config = json.load(f)
             self.slideMarginX = config["slide_margin_x"]
