@@ -13,14 +13,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import json
-email_password = None
+email_password = "None"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-with open(os.path.join(BASE_DIR, 'backend\\confidential_keys.json')) as config_file:
-    data = json.load(config_file)
-    email_password = data['email_password']
+# with open(os.path.join(BASE_DIR, 'backend\\confidential_keys.json')) as config_file:
+#     data = json.load(config_file)
+#     email_password = data['email_password']
 
 
 # Quick-start development settings - unsuitable for production
