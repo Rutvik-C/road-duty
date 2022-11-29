@@ -114,6 +114,35 @@ class ChallanViewSet(viewsets.ModelViewSet):
             send_email_to_user(rider_obj.name, rider_obj.email, new_data["location"], challan_data['id'])
         return Response(self.get_serializer(obj).data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def put(self, request, format=None):
+        print(request.data)
+        new_data = json.dumps(request.data)
+        new_data = json.loads(new_data)
+        print(new_data, type(new_data))
+        if not 'rider' in request.data and 'license_number' in request.data:
+            params = {"license_number": new_data['license_number']}
+            rider_info = requests.get("http://127.0.0.1:8000/" + "rider", params=params)
+            rider_info = rider_info.json()
+
+            if rider_info == []:
+                # no such rider exists
+                return
+            new_data['rider'] = rider_info[0]['id']
+            # obj = Rider.objects.filter(license_number=request.data['license_number'])
+            # print(obj.first().pk)
+            # new_data['rider'] = obj.first().pk
+        # serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=new_data)
+        serializer.is_valid(raise_exception=True)
+        obj = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        if 'rider' in new_data:
+            rider_obj = Rider.objects.filter(pk=new_data['rider']).first()
+            challan_data = self.get_serializer(obj).data
+            # print(rider_obj, challan_id['id'])
+            send_email_to_user(rider_obj.name, rider_obj.email, new_data["location"], challan_data['id'])
+        return Response(self.get_serializer(obj).data, status=status.HTTP_201_CREATED, headers=headers)
+
     """def create(self, request, *args, **kwargs):
         print(request.data)
         new_data = json.dumps(request.data)
