@@ -3,16 +3,17 @@ import cv2
 import json
 import requests
 import os
+import shutil
 from collections import defaultdict
 
 
-def makeChallan(config, licenseNumber, location, manualCheck, imageLocs):
+def makeChallan(options, licenseNumber, location, manualCheck, imageLocs):
     data = {
         "location": location,
         "license_number": licenseNumber,
         "status": "to_check_manually" if manualCheck else "unpaid",
     }
-    response = requests.post(url=config["challan_endpoint"], data=data)
+    response = requests.post(url=options["challan_endpoint"], data=data)
     new_challan_id = response.json()["id"]
     print(f"INFO: ResultProcess: Challan created.")
 
@@ -20,12 +21,12 @@ def makeChallan(config, licenseNumber, location, manualCheck, imageLocs):
         payload = {'challan': str(new_challan_id), 'type': key}
         for i, imageLoc in enumerate(imageLocs[key]):
             files = [('image', (f'{i}.jpg', open(imageLoc, 'rb'), 'image/jpeg'))]
-            response = requests.post(config["challan_img_endpoint"], data=payload, files=files)
+            response = requests.post(options["challan_img_endpoint"], data=payload, files=files)
 
     print(f"INFO: ResultProcess: Images uploaded.")
 
 
-def processResult(ip, config):
+def processResult(ip, options):
     while True:
         if ip.empty():
             continue
@@ -51,8 +52,10 @@ def processResult(ip, config):
             cv2.imwrite(f"{folder}/vehicle.jpg", vehicle)
             imageLocs["cutout"].append(f"{folder}/vehicle.jpg")
 
-        # print(packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
         try:
-            makeChallan(config, packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
+            makeChallan(options, packet.licenseNumber, packet.location, packet.manualCheck, imageLocs)
         except Exception as e:
             print(f"ERROR: ResultProcess: {e}.")
+
+        if not options["keep_tmp"]:
+            shutil.rmtree(folder)

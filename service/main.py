@@ -25,6 +25,7 @@ if __name__ == '__main__':
     parser.add_argument("--address", type=str, required=True)
     parser.add_argument("--usePrecomputed", action="store_true")
     parser.add_argument("--precomputedSrc", type=str)
+    parser.add_argument("--keepTmp", action="store_true")
 
     args = parser.parse_args()
     ipType = args.type
@@ -32,6 +33,7 @@ if __name__ == '__main__':
     address = args.address
     usePrecomputed = args.usePrecomputed
     precomputedSrc = args.precomputedSrc
+    keepTmp = args.keepTmp
 
     with open("config.json", "r") as f:
         config = json.load(f)
@@ -55,19 +57,30 @@ if __name__ == '__main__':
             helmetPrecomputed = json.load(f)
 
     motorcycleOptions = {
+        "keep_tmp": keepTmp,
         "track": True if ipType == "video" else False,
         "detect": True if not usePrecomputed else False,
         "precomputed_data": motorcyclePrecomputed
     }
     helmetOptions = {
+        "keep_tmp": keepTmp,
         "detect": True if not usePrecomputed else False,
         "precomputed_data": helmetPrecomputed
     }
-
+    licenseOptions = {
+        "keep_tmp": keepTmp,
+        "ocr_threshold": config["ocr_threshold"]
+    }
+    resultOptions = {
+        "keep_tmp": keepTmp,
+        "challan_endpoint": config["challan_endpoint"],
+        "challan_img_endpoint": config["challan_img_endpoint"]
+    }
+    
     Process(name="motorcycle", target=detectMotorcycle, args=(inputQueue, detectMotorcycleOutputQueue, motorcycleDetector, motorcycleOptions)).start()
     Process(name="helmet", target=detectHelmet, args=(detectMotorcycleOutputQueue, detectHelmetOutputQueue, helmetDetector, helmetOptions)).start()
-    Process(name="license", target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector, config)).start()
-    Process(name="result", target=processResult, args=(detectLicenseOutputQueue, config)).start()
+    Process(name="license", target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector, licenseOptions)).start()
+    Process(name="result", target=processResult, args=(detectLicenseOutputQueue, resultOptions)).start()
 
     print(f"INFO: Starting main loop.")
     if ipType == "video":

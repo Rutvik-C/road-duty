@@ -36,8 +36,6 @@ def detectMotorcycle(ip, op, detector, options):
 
             isInVicinity = False
             for track in tracks:
-                # print(f"Track centered at {track.x}, {track.y} with rx={track.rx} ry={track.ry}")
-
                 if track.id not in trackWithSuccessor and track.isClose(centerX, centerY):
                     print(f"INFO: DetectMotorcycleProcess: {track.id} is close. Adding to existing")
                     track.addTrackFragment(centerX, centerY, do)
@@ -61,9 +59,10 @@ def detectMotorcycle(ip, op, detector, options):
                     if tracks[i].isValid():
                         op.put(Packet(-1, packet.imgLoc, packet.location, tracks[i]))
 
-                        os.mkdir(f"test_output/{tracks[i].id}")
+                        folder = f"tmp/tracks/{tracks[i].id}"
+                        os.mkdir(folder)
                         for idx, do in enumerate(tracks[i].journey):
-                            cv2.imwrite(f"test_output/{tracks[i].id}/{idx}.jpg", do.getCroppedImage())
+                            cv2.imwrite(f"{folder}/{idx}.jpg", do.getCroppedImage())
 
                     del tracks[i]
                 i += 1
