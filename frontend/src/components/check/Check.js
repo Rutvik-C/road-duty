@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Image from '../image/Image';
@@ -6,33 +6,19 @@ import { useParams } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-const LINKS = [
-  {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
-  {image: 'https://avatars.githubusercontent.com/u/69', id: 69},
-  {image: 'https://avatars.githubusercontent.com/u/100', id: 100},
-  {image: 'https://avatars.githubusercontent.com/u/6969', id: 6969},
-  {image: 'https://avatars.githubusercontent.com/u/1', id: 1}, 
-  {image: 'https://avatars.githubusercontent.com/u/3', id: 3}, 
-  {image: 'https://avatars.githubusercontent.com/u/4', id: 4}, 
-  {image: 'https://avatars.githubusercontent.com/u/5', id: 5},
-  {image: 'https://avatars.githubusercontent.com/u/6', id: 6},
-  {image: 'https://avatars.githubusercontent.com/u/7', id: 7},
-  {image: 'https://avatars.githubusercontent.com/u/111', id: 111},
-  {image: 'https://avatars.githubusercontent.com/u/123', id: 123},
-  {image: 'https://avatars.githubusercontent.com/u/1234', id: 1234},
-]
-
 export default function Check() {
   // eslint-disable-next-line
   const { challanId } = useParams();    // this challanId will be used when we will be making the api calls, as of now no use, as we are showing constant carousal
-
   const [numberPlate, setNumberPlate] = useState("");
+  const [images, setImages] = useState([]);
 
   const handleClickSubmit = () => {
     axios.get(`http://127.0.0.1:8000/challan/${challanId}/`).then((res) => {
       const content = res.data;
       content.license_number = numberPlate
       content.status = "unpaid"
+
+      console.log("numberPlate: " + numberPlate);
 
       axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
     })
@@ -47,11 +33,21 @@ export default function Check() {
     })
   }
 
+  useEffect(() => {
+    axios.get(`http://localhost:8000/challan_image/?challan=${challanId}`).then((res) => {
+      const content = res.data;
+      setImages(content)
+      console.log(content);
+    })
+  }, [])
+
+ 
+  
   return (
     <div>
         <Carousel>
-          {LINKS.map((link) =>
-            <Image key={link.id} link={link.image} />
+          {images.map((image) =>
+            <Image key={image.id} link={image.image} />
           )}
         </Carousel>
         <Form>

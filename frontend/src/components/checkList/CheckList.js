@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   MDBCard,
   MDBCardBody,
@@ -6,39 +6,32 @@ import {
 } from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
 
-const LINKS = [
-  {image: 'https://avatars.githubusercontent.com/u/2', id: 2}, 
-  {image: 'https://avatars.githubusercontent.com/u/69', id: 69},
-  {image: 'https://avatars.githubusercontent.com/u/100', id: 100},
-  {image: 'https://avatars.githubusercontent.com/u/6969', id: 6969},
-  {image: 'https://avatars.githubusercontent.com/u/1', id: 1}, 
-  {image: 'https://avatars.githubusercontent.com/u/3', id: 3}, 
-  {image: 'https://avatars.githubusercontent.com/u/4', id: 4}, 
-  {image: 'https://avatars.githubusercontent.com/u/5', id: 5},
-  {image: 'https://avatars.githubusercontent.com/u/6', id: 6},
-  {image: 'https://avatars.githubusercontent.com/u/7', id: 7},
-  {image: 'https://avatars.githubusercontent.com/u/111', id: 111},
-  {image: 'https://avatars.githubusercontent.com/u/123', id: 123},
-  {image: 'https://avatars.githubusercontent.com/u/1234', id: 1234},
-]
+import axios from 'axios';
 
 export default function CheckList() {
+  const [challans, setChallans] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:8000/challan/?status=to_check_manually").then((res) => {
+      const content = res.data;
+      setChallans(content)
+      console.log(content);
+    })
+  }, [])
   return (
     <div>
         <MDBCard className='m-3 p-3'>
             <MDBCardBody>
                 <MDBCardTitle>Check List</MDBCardTitle>
-                    {LINKS.map((link) =>
-                      <MDBCard style={{ maxWidth: '100%' }} >
+                    {challans.map((challan) =>
+                      <MDBCard key={challan.id} style={{ maxWidth: '100%' }} >
                         <MDBCard className='m-3'>
                           <MDBCardBody className="d-flex justify-content-between">
-                              <MDBCardTitle>{link.id}</MDBCardTitle>
+                              <MDBCardTitle>{challan.id}</MDBCardTitle>
                               <Link
                                 className="btn btn-primary"
                                 to={{
-                                    pathname: `/check/${link.id}`,
+                                    pathname: `/check/${challan.id}`,
                                 }}
-                                activeClassName="current"
                               >
                                 Go
                             </Link>

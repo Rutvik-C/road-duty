@@ -46,7 +46,7 @@ export default function QueryDisplay() {
 
       const data_to_send = {location: content.location, license_number: numberPlate, status: "unpaid"}
 
-      axios.post('http://127.0.0.1:8000/challan', data_to_send)
+      axios.post('http://127.0.0.1:8000/challan/', data_to_send)
     })
   }
   
