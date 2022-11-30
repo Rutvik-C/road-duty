@@ -20,8 +20,9 @@ def makeChallan(options, licenseNumber, location, manualCheck, imageLocs):
     for key in imageLocs:
         payload = {'challan': str(new_challan_id), 'type': key}
         for i, imageLoc in enumerate(imageLocs[key]):
-            files = [('image', (f'{i}.jpg', open(imageLoc, 'rb'), 'image/jpeg'))]
-            response = requests.post(options["challan_img_endpoint"], data=payload, files=files)
+            with open(imageLoc, 'rb') as f:
+                files = [('image', (f'{i}.jpg', f, 'image/jpeg'))]
+                response = requests.post(options["challan_img_endpoint"], data=payload, files=files)
 
     print(f"INFO: ResultProcess: Images uploaded.")
 
