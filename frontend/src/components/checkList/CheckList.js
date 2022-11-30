@@ -17,6 +17,7 @@ export default function CheckList() {
       console.log(content);
     })
   }, [])
+
   return (
     <div>
         <MDBCard className='m-3 p-3'>

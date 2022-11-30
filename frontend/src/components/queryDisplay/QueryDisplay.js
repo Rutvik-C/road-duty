@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { Form } from "react-bootstrap";
 
 export default function QueryDisplay() {
   const { id } = useParams();
-
+  const history = useHistory();
   const [challanId, setChallanId] = useState("")
   const [issue, setIssue] = useState("");
   const [status, setStatus] = useState("");
@@ -34,6 +34,10 @@ export default function QueryDisplay() {
       content.status = "unpaid"
 
       axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
+
+      alert("Case marked with No Issue. Challan Status changed back to Unpaid")
+      history.push('/query')
+      history.go(0)
     })
   }
 
@@ -45,8 +49,11 @@ export default function QueryDisplay() {
       axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
 
       const data_to_send = {location: content.location, license_number: numberPlate, status: "unpaid"}
-
       axios.post('http://127.0.0.1:8000/challan/', data_to_send)
+
+      alert("Case Updated.")
+      history.push('/query')
+      history.go(0)
     })
   }
   

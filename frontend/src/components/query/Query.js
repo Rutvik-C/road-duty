@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
 
 export default function Query() {
   const { challanId } = useParams();
   const [issue, setIssue] = useState("");
+  const history = useHistory();
 
   const handleClick = (e) => {
     // e.preventDefault()
@@ -25,8 +26,11 @@ export default function Query() {
     }
 
     axios.post('http://127.0.0.1:8000/query/', data);
-
     setIssue("");
+
+    alert("Query Submitted.")
+    history.push(`/challan/${challanId}/`)
+    history.go(0)
   }
 
   return (

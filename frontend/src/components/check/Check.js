@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Image from '../image/Image';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
 export default function Check() {
-  // eslint-disable-next-line
   const { challanId } = useParams();    // this challanId will be used when we will be making the api calls, as of now no use, as we are showing constant carousal
   const [numberPlate, setNumberPlate] = useState("");
   const [images, setImages] = useState([]);
+  const history = useHistory();
 
   const handleClickSubmit = () => {
     axios.get(`http://127.0.0.1:8000/challan/${challanId}/`).then((res) => {
@@ -21,6 +21,10 @@ export default function Check() {
       console.log("numberPlate: " + numberPlate);
 
       axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
+
+      alert("Challan Submitted.")
+      history.push('/check')
+      history.go(0)
     })
   }
 
@@ -30,6 +34,10 @@ export default function Check() {
       content.status = "invalid"
 
       axios.put(`http://127.0.0.1:8000/challan/${challanId}/`, content)
+      
+      alert("Marked as Invalid case.")
+      history.push('/check')
+      history.go(0)
     })
   }
 
@@ -41,8 +49,6 @@ export default function Check() {
     })
   }, [])
 
- 
-  
   return (
     <div>
         <Carousel>
