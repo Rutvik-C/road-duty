@@ -77,10 +77,14 @@ if __name__ == '__main__':
         "challan_img_endpoint": config["challan_img_endpoint"]
     }
     
-    Process(name="motorcycle", target=detectMotorcycle, args=(inputQueue, detectMotorcycleOutputQueue, motorcycleDetector, motorcycleOptions)).start()
-    Process(name="helmet", target=detectHelmet, args=(detectMotorcycleOutputQueue, detectHelmetOutputQueue, helmetDetector, helmetOptions)).start()
-    Process(name="license", target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector, licenseOptions)).start()
-    Process(name="result", target=processResult, args=(detectLicenseOutputQueue, resultOptions)).start()
+    motorcycleProcess = Process(name="motorcycle", target=detectMotorcycle, args=(inputQueue, detectMotorcycleOutputQueue, motorcycleDetector, motorcycleOptions))
+    motorcycleProcess.start()
+    helmetProcess = Process(name="helmet", target=detectHelmet, args=(detectMotorcycleOutputQueue, detectHelmetOutputQueue, helmetDetector, helmetOptions))
+    helmetProcess.start()
+    licenseProcess = Process(name="license", target=detectLicense, args=(detectHelmetOutputQueue, detectLicenseOutputQueue, licenseDetector, licenseOptions))
+    licenseProcess.start()
+    resultProcess = Process(name="result", target=processResult, args=(detectLicenseOutputQueue, resultOptions))
+    resultProcess.start()
 
     print(f"INFO: Starting main loop.")
     if ipType == "video":
@@ -91,15 +95,16 @@ if __name__ == '__main__':
         FRAME = 1
         while cap.isOpened():
             ret, frame = cap.read()
-            if count % FRAME == 0:
-                if ret:
+            if ret:
+                if count % FRAME == 0:
                     imgLoc = f"tmp/motorcycle_queue/{count}.jpg"
                     cv2.imwrite(imgLoc, frame)
                     inputQueue.put(Packet(count, imgLoc, address))
                     count += 1
-        
-        while True:
-            time.sleep(10)
+            else:
+                break
+
+        input()
     
     elif ipType == "image":
         images = deque()
@@ -114,4 +119,21 @@ if __name__ == '__main__':
                 inputQueue.put(Packet(count, imgLoc, address))
                 count += 1
             else:
-                time.sleep(10)
+                input()
+                break
+    
+    print("INFO: Exiting, closing queues.")
+    inputQueue.close()
+    detectMotorcycleOutputQueue.close()
+    detectHelmetOutputQueue.close()
+    detectLicenseOutputQueue.close()
+    inputQueue.join_thread()
+    detectMotorcycleOutputQueue.join_thread()
+    detectHelmetOutputQueue.join_thread()
+    detectLicenseOutputQueue.join_thread()
+    print("INFO: Terminating threads.")
+    motorcycleProcess.terminate() 
+    helmetProcess.terminate()
+    licenseProcess.terminate()
+    resultProcess.terminate()
+    exit()
