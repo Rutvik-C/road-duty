@@ -186,6 +186,10 @@ class QueryViewSet(viewsets.ModelViewSet):
     queryset = Query.objects.all()
     serializer_class = QuerySerializer
 
+    def get_queryset(self):
+        queryset = Query.objects.filter(challan__status="query_raised")
+        return queryset
+
 
 class VahanViewSet(viewsets.ModelViewSet):
     queryset = Vahan.objects.all()
