@@ -25,12 +25,13 @@ export default function Query() {
       issue: issue
     }
 
-    axios.post('http://127.0.0.1:8000/query/', data);
-    setIssue("");
+    axios.post('http://127.0.0.1:8000/query/', data).then(res => {
+        setIssue("");
+        alert("Query Submitted.")
 
-    alert("Query Submitted.")
-    history.push(`/challan/${challanId}/`)
-    history.go(0)
+        history.push(`/challan/${challanId}/`)
+        history.go(0)
+    }); 
   }
 
   return (
@@ -40,7 +41,7 @@ export default function Query() {
         <Form.Control type="text" name="issue" onChange={(event) => setIssue(event.target.value)} placeholder="Enter your query" />
       </Form.Group>
 
-      <Button variant="primary" type="button" onClick={handleClick}>
+      <Button variant="primary" onClick={handleClick}>
         Submit
       </Button>
     </Form>

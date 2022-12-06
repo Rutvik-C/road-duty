@@ -53,7 +53,6 @@ export default function Check() {
     <div>
         <Form>
             <Form.Group className="mb-3">
-                {/* <Form.Label style={{color:"white", fontWeight:"bold"}}>Number Plate</Form.Label> */}
                 <Form.Control type="text" placeholder="License Plate Number" name="licensePlateNumber" onChange={(event) => setNumberPlate(event.target.value)} />
             </Form.Group>
 
