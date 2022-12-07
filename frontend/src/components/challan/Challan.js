@@ -77,9 +77,9 @@ const Challan = props => {
 
   return (
     <div>
-      <NavLink to="/" style={{color:"whitesmoke"}}>
+      {/* <NavLink to="/" style={{color:"whitesmoke"}}>
         Go Back
-      </NavLink>
+      </NavLink> */}
       <hr />
 
       <MDBCard className='m-3 p-3'>
@@ -113,7 +113,7 @@ const Challan = props => {
             <MDBCard alignment='center' className="m-3">
               <MDBCardBody>
                 <Link
-                  className="btn btn-primary"
+                  className="btn btn-dark"
                   to={{
                     pathname: `/raise_query/${challanId}`,
                   }}
@@ -127,7 +127,7 @@ const Challan = props => {
           <MDBCol sm='6'>
             <MDBCard alignment='center' className="m-3">
               <MDBCardBody>
-                <Button onClick={handleClick}>{isPaid}</Button>
+                <Button variant="btn btn-dark" onClick={handleClick}>{isPaid}</Button>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

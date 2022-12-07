@@ -40,7 +40,7 @@ export default function Query() {
         <Form.Control type="text" name="issue" onChange={(event) => setIssue(event.target.value)} placeholder="Enter your query" />
       </Form.Group>
 
-      <Button variant="primary" type="button" onClick={handleClick}>
+      <Button variant="dark" type="input" onClick={handleClick}>
         Submit
       </Button>
     </Form>

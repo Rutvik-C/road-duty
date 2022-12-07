@@ -17,10 +17,10 @@ const Home = props => {
 
   return (
     <div>
-      <h1>Road Duty</h1>
+      {/* <h1>Road Duty</h1> */}
       <Form className="register-form">
         <Form.Group controlId="username">
-          <Form.Label style={{fontWeight: "bold"}}>Challan ID</Form.Label>
+          {/* <Form.Label style={{fontWeight: "bold", color: "whitesmoke"}}>Challan ID</Form.Label> */}
           <Form.Control
             type="text"
             placeholder="Enter Challan ID"
@@ -30,7 +30,7 @@ const Home = props => {
         </Form.Group>
 
         <Link
-          className="btn btn-primary"
+          className="btn btn-dark"
           to={{
             pathname: `/challan/${state.challanId}`,
             state

@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500&display=swap');
+
 body {
+    font-family: 'DM Sans', sans-serif;
     padding: 20px;
     letter-spacing: 1px;
-    background: url("./img/traffic-5.jpg");
+    background: url("./img/traffic-1.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }

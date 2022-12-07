@@ -28,7 +28,7 @@ export default function QueryList() {
                       <MDBCard key={query.id} style={{ maxWidth: '100%' }} >
                         <MDBCard className='m-3'>
                           <MDBCardBody className="d-flex justify-content-between">
-                              <MDBCardTitle>{query.challan}</MDBCardTitle>
+                              <MDBCardTitle>Challan {query.challan}</MDBCardTitle>
                               <Link
                                 className="btn btn-primary"
                                 to={{
