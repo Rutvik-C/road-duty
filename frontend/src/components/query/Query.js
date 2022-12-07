@@ -25,12 +25,13 @@ export default function Query() {
       issue: issue
     }
 
-    axios.post('http://127.0.0.1:8000/query/', data);
-    setIssue("");
+    axios.post('http://127.0.0.1:8000/query/', data).then(res => {
+        setIssue("");
+        alert("Query Submitted.")
 
-    alert("Query Submitted.")
-    history.push(`/challan/${challanId}/`)
-    history.go(0)
+        history.push(`/challan/${challanId}/`)
+        history.go(0)
+    }); 
   }
 
   return (
